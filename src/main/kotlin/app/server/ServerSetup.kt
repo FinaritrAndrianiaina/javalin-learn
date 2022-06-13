@@ -1,6 +1,7 @@
 package app.server;
 
-import UserController
+import app.controller.UserController
+import app.database.DatabaseConnection
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.usthe.sureness.DefaultSurenessConfig
 import com.usthe.sureness.mgt.SurenessSecurityManager
@@ -11,6 +12,7 @@ import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
 import io.javalin.http.Context
 import io.javalin.http.HttpCode
+import org.jetbrains.exposed.sql.name
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -24,20 +26,9 @@ object ServerSetup {
     private val log: Logger = LoggerFactory.getLogger(ServerSetup::class.java)
 
     fun init() {
-        DefaultSurenessConfig();
-        app.before {
-            val securityManager = SurenessSecurityManager.getInstance();
-            val subjectSum = securityManager.checkIn(it.req);
-            if (subjectSum != null) {
-                SurenessContextHolder.bindSubject(subjectSum);
-            }
-        }
-
-        app.after { SurenessContextHolder.unbindSubject() }
-
-        this.configAuth();
+        this.initDatabase();
         this.defineRoutes();
-        this.filterAuthExceptions();
+
 
         app.exception(
             MismatchedInputException::class.java
@@ -87,10 +78,21 @@ object ServerSetup {
 
     private fun configAuth() {
 
+        DefaultSurenessConfig();
+        app.before {
+            val securityManager = SurenessSecurityManager.getInstance();
+            val subjectSum = securityManager.checkIn(it.req);
+            if (subjectSum != null) {
+                SurenessContextHolder.bindSubject(subjectSum);
+            }
+        }
+
+        this.filterAuthExceptions();
+        app.after { SurenessContextHolder.unbindSubject() }
         app["/auth/token", { ctx: Context ->
             val subjectSum = SurenessContextHolder.getBindSubject()
             if (subjectSum == null) {
-                ctx.result("Please auth!")
+                ctx.result("Please auth!");
             } else {
                 val principal = subjectSum.principal as String
                 val roles =
@@ -100,9 +102,19 @@ object ServerSetup {
                     UUID.randomUUID().toString(), principal,
                     "token-server", 3600L, roles
                 )
-                ctx.result(jwt)
+                ctx.result(jwt);
             }
         }]
+    }
+
+    private fun initDatabase() {
+        try {
+            DatabaseConnection.connect().let {
+                log.info("Connected to Database ${it.name}")
+            };
+        } catch (e: java.lang.Exception) {
+            log.error(e.toString());
+        }
     }
 
     private fun defineRoutes() {
