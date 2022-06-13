@@ -17,10 +17,17 @@ object UserController {
         ctx.json(createdUser);
     }
 
+    private fun getTokenId(ctx: Context) {
+        val id = ctx.pathParam("id")
+        ctx.result(UserService.generateToken(id.toInt()));
+    }
+
     fun defineEndpoints() {
         path("/user") {
             get("/", UserController::getUser)
             post("new", UserController::addUser)
+            get("/token/{id}", UserController::getTokenId)
         }
     }
+
 }
