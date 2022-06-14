@@ -11,7 +11,7 @@ object UserService {
     fun insertUser(user: User): User {
         val insertedUser = transaction {
             UserEntity.new {
-                name = user.name;
+                username = user.name;
                 age = user.age;
             }
         }

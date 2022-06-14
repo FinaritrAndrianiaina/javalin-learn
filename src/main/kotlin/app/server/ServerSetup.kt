@@ -2,6 +2,7 @@ package app.server;
 
 import app.controller.UserController
 import app.database.DatabaseConnection
+import app.security.AuthManager
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
@@ -16,6 +17,7 @@ import java.util.*
 object ServerSetup {
     private var app: Javalin = Javalin.create() { config ->
         config.enableDevLogging() // enable extensive development logging for http and websocket
+        config.accessManager(AuthManager);
     }.start(7000);
 
     private val log: Logger = LoggerFactory.getLogger(ServerSetup::class.java)

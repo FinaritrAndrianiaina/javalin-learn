@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.security.Role
 import app.service.UserService
 import app.table.user.User
 import io.javalin.apibuilder.ApiBuilder.*;
@@ -24,9 +25,9 @@ object UserController {
 
     fun defineEndpoints() {
         path("/user") {
-            get("/", UserController::getUser)
-            post("new", UserController::addUser)
-            get("/token/{id}", UserController::getTokenId)
+            get("/", UserController::getUser, Role.ANONYMOUS)
+            post("new", UserController::addUser, Role.ANONYMOUS)
+            get("/token/{id}", UserController::getTokenId, Role.USER)
         }
     }
 
