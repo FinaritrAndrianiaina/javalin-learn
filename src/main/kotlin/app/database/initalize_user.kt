@@ -12,13 +12,15 @@ fun main() {
         if (!UsersTable.exists()) {
             SchemaUtils.create(UsersTable);
             UserEntity.new {
-                name = "Garret";
+                username = "Garret";
                 age = 32;
             }
             UserEntity.new {
-                name = "Alfred";
+                username = "Alfred";
                 age = 10;
             }
+        } else {
+            SchemaUtils.createMissingTablesAndColumns(UsersTable, inBatch = true, withLogs = true)
         }
     }
 }
