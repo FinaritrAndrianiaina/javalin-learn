@@ -13,7 +13,7 @@ class UserJwt(user: User) {
         jwt = JWT.hs256(JWTKeyID("USER-${user.id}")) {
             subject(user.id.toString())
             issuer("localhost@javalin")
-            claim("name", user.name)
+            claim("name", user.username)
             expiresAt(LocalDateTime.now().plusDays(2))
             issuedNow()
         }

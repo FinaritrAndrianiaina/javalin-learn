@@ -3,6 +3,10 @@ package app.service
 import app.security.UserJwt
 import app.table.user.User
 import app.table.user.UserEntity
+import app.table.user.UsersTable
+import org.jetbrains.exposed.sql.SizedIterable
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
@@ -11,7 +15,7 @@ object UserService {
     fun insertUser(user: User): User {
         val insertedUser = transaction {
             UserEntity.new {
-                username = user.name;
+                username = user.username;
                 age = user.age;
             }
         }
@@ -40,5 +44,12 @@ object UserService {
             UserEntity.all().map { it.toObject() }.toList();
         }
         return listUser;
+    }
+
+    fun findWithUsernameAndPassword(username: String, password: String): UserEntity? {
+        val userFound = transaction {
+            UserEntity.find { (UsersTable.username eq username) and (UsersTable.password eq password) }.firstOrNull()
+        }
+        return userFound;
     }
 }
