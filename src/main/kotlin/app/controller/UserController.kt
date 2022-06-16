@@ -5,9 +5,18 @@ import app.service.UserService
 import app.table.user.User
 import io.javalin.apibuilder.ApiBuilder.*;
 import io.javalin.http.Context
+import io.javalin.plugin.openapi.annotations.OpenApi
+import io.javalin.plugin.openapi.annotations.OpenApiContent
+import io.javalin.plugin.openapi.annotations.OpenApiResponse
 
 object UserController {
 
+    @OpenApi(
+        summary = "Get all users",
+        operationId = "getAllUsers",
+        tags = ["User"],
+        responses = [OpenApiResponse("200", [OpenApiContent(Array<User>::class)])]
+    )
     private fun getUser(ctx: Context) {
         ctx.json(UserService.getAllUser());
     }
