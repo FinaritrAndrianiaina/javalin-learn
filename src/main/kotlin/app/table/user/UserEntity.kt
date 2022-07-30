@@ -7,10 +7,11 @@ import org.jetbrains.exposed.dao.id.EntityID
 class UserEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<UserEntity>(UsersTable)
 
-    var name by UsersTable.name
+    var username by UsersTable.username
+    var password by UsersTable.password
     var age by UsersTable.age
 
     fun toObject(): User {
-        return User(this.id.value, name, age)
+        return User(this.id.value, username, age)
     }
 }

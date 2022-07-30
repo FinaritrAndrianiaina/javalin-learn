@@ -107,11 +107,6 @@
             <version>2.13.2</version>
         </dependency>
         <dependency>
-            <groupId>com.usthe.sureness</groupId>
-            <artifactId>sureness-core</artifactId>
-            <version>1.0.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.jetbrains.exposed</groupId>
             <artifactId>exposed-core</artifactId>
             <version>0.37.3</version>
@@ -130,6 +125,23 @@
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>3.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.nefilim.kjwt</groupId>
+            <artifactId>kjwt-core</artifactId>
+            <version>0.5.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.arrow-kt</groupId>
+            <artifactId>arrow-core</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin-openapi</artifactId>
+            <version>4.6.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
